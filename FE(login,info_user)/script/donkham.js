@@ -55,19 +55,7 @@ window.onload = () => {
       const result = await res.json();
 
       if (res.ok) {
-        // ✅ Gọi API reset benhNhanId về null sau khi tạo đơn thành công
-        try {
-          const resetRes = await fetch(`http://localhost:5000/appointment/reset/${lichKhamId}`, {
-            method: "PUT"
-          });
-          const resetData = await resetRes.json();
-          if (!resetRes.ok) {
-            console.warn("⚠️ Reset lịch khám thất bại:", resetData.message);
-          }
-        } catch (resetErr) {
-          console.error("❌ Lỗi khi reset lịch khám:", resetErr);
-        }
-
+        // Không reset benhNhanId để giữ liên kết giữa bệnh nhân và lịch khám
         alert("✅ Tạo đơn khám thành công!");
         window.location.href = "doctor.html";
       } else {
