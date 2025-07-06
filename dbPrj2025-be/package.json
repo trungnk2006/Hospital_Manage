@@ -1,0 +1,35 @@
+{
+  "name": "dbproject2025",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "npm init",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "eslint": "^9.29.0",
+    "globals": "^16.2.0",
+    "nodemon": "^3.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TranKhoi164/dbPrj2025-be.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/TranKhoi164/dbPrj2025-be/issues"
+  },
+  "homepage": "https://github.com/TranKhoi164/dbPrj2025-be#readme"
+}
