@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Tạo đơn khám</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .info, .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: bold;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: gray;
+    }
+    button.back {
+      background-color: #95a5a6;
+    }
+  </style>
+</head>
+<body>
+  <h2>Thông tin bệnh nhân</h2>
+  <div class="info">
+    <p><strong>Họ tên:</strong> <span id="tenBenhNhan"></span></p>
+    <p><strong>Ngày sinh:</strong> <span id="ngaySinh"></span></p>
+    <p><strong>Giới tính:</strong> <span id="gioiTinh"></span></p>
+    <p><strong>SĐT:</strong> <span id="sdt"></span></p>
+  </div>
+
+  <h2>Đơn khám</h2>
+  <form id="donKhamForm">
+    <div class="form-group">
+      <label for="benhLy">Bệnh lý:</label>
+      <input type="text" id="benhLy" required>
+    </div>
+    <div class="form-group">
+      <label for="mucDo">Mức độ bệnh:</label>
+      <select id="mucDo" required>
+        <option value="">-- Chọn mức độ --</option>
+        <option value="Nhẹ">Nhẹ</option>
+        <option value="Trung bình">Trung bình</option>
+        <option value="Nặng">Nặng</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="dieuTri">Phác đồ điều trị:</label>
+      <textarea id="dieuTri" rows="3" required></textarea>
+    </div>
+
+    <div class="btn-group">
+      <button type="submit">Tạo đơn khám</button>
+      <button type="button" id="btnQuayLai" class="back"> Quay lại </button>
+    </div>
+  </form>
+
+  <script src="script/donkham.js"></script>
+  <script>
+    document.getElementById("btnQuayLai").addEventListener("click", () => {
+      window.location.href = "doctor.html";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng ký người dùng</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Đăng ký</h2>
+    <form id="registerForm">
+      <select id="role" required>
+        <option value="">-- Chọn vai trò --</option>
+        <option value="bacSi">Bác sĩ</option>
+        <option value="benhNhan">Bệnh nhân</option>
+      </select>
+
+      <input type="text" id="ten" placeholder="Họ và tên" required />
+      <input type="text" id="CCCD" placeholder="CCCD" required />
+      <input type="date" id="ngaySinh" placeholder="Ngày sinh" required />
+      <select id="gioiTinh" required>
+        <option value="">-- Chọn giới tính --</option>
+        <option value="nam">Nam</option>
+        <option value="nu">Nữ</option>
+      </select>
+      <input type="text" id="sdt" placeholder="Số điện thoại" required />
+
+      <!-- Chỉ hiện nếu là bác sĩ -->
+      <div id="bacSiFields" style="display: none;">
+        <input type="number" id="namKinhNghiem" placeholder="Năm kinh nghiệm" />
+        <input type="text" id="caTruc" placeholder="Ca trực (sáng, chiều, tối)" />
+      </div>
+
+      <!-- Chỉ hiện nếu là bệnh nhân -->
+      <div id="benhNhanFields" style="display: none;">
+        <input type="text" id="diaChi" placeholder="Địa chỉ" />
+      </div>
+
+      <button type="submit">Đăng ký</button>
+    </form>
+    <p>Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+    <p id="message" class="message"></p>
+  </div>
+
+  <script src="script/register.js"></script>
+</body>
+</html>
