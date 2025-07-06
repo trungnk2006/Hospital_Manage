@@ -75,7 +75,32 @@ const updateExamination = async (req, res) => {
 	}
 };
 
+// Lấy đơn khám theo bệnh nhân
+const getExaminationsByPatient = async (req, res) => {
+	try {
+		const benhNhanId = parseInt(req.params.benhNhanId);
+
+		const examinations = await DonKham.findAll({
+			where: { benhNhanId },
+			include: [
+				{ model: ThongTinCaNhan, as: "benhNhan" },
+				{ model: ThongTinCaNhan, as: "bacSi" },
+			],
+			order: [['createdAt', 'DESC']]
+		});
+
+		res.json({
+			examinations,
+			message: "Lấy đơn khám thành công"
+		});
+	} catch (error) {
+		console.error("❌ Lỗi khi lấy đơn khám theo bệnh nhân:", error);
+		handleExceptions(500, error.message, res);
+	}
+};
+
 module.exports = {
 	createExamination: createExamination,
 	updateExamination: updateExamination,
+	getExaminationsByPatient: getExaminationsByPatient,
 };

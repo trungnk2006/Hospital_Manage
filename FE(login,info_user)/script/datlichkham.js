@@ -258,23 +258,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!data.examinations || data.examinations.length === 0) {
                 myExaminationsTableBody.innerHTML = `<tr><td colspan="5">Chưa có đơn khám nào.</td></tr>`;
             } else {
-                // Lấy thông tin bác sĩ để hiển thị tên
-                const doctorPromises = data.examinations.map(exam => 
-                    fetch(`http://localhost:5000/user/${exam.bacSiId}`)
-                        .then(res => res.json())
-                        .then(data => data.user)
-                        .catch(() => null)
-                );
-
-                const doctors = await Promise.all(doctorPromises);
-
-                data.examinations.forEach((exam, index) => {
-                    const doctor = doctors[index] ? doctors[index].ten : `Bác sĩ #${exam.bacSiId}`;
+                // Hiển thị đơn khám (thông tin bác sĩ đã được include trong response)
+                data.examinations.forEach((exam) => {
+                    const doctorName = exam.bacSi ? exam.bacSi.ten : `Bác sĩ #${exam.bacSiId}`;
                     const createdDate = new Date(exam.createdAt).toLocaleDateString("vi-VN");
 
                     const row = document.createElement("tr");
                     row.innerHTML = `
-                        <td>${doctor}</td>
+                        <td>${doctorName}</td>
                         <td>${exam.benhLy || "Chưa có thông tin"}</td>
                         <td>${exam.mucDoBenh || "Chưa có thông tin"}</td>
                         <td>${exam.dieuTri || "Chưa có thông tin"}</td>

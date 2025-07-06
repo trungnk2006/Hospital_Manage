@@ -1,4 +1,4 @@
-const { createExamination, updateExamination } = require('../controller/examinationCtrl')
+const { createExamination, updateExamination, getExaminationsByPatient } = require('../controller/examinationCtrl')
 
 const router = require('express').Router()
 
@@ -6,6 +6,7 @@ const router = require('express').Router()
 router.post('/create', createExamination)
 // donKham: { id, benhLy?, mucDoBenh?, dieuTri? } 
 router.patch('/update', updateExamination)
-
+// Lấy đơn khám theo bệnh nhân
+router.get('/patient/:benhNhanId', getExaminationsByPatient)
 
 module.exports = router
