@@ -55,9 +55,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Show schedule selection for a doctor
-    function showSchedule(doctor) {
+    async function showSchedule(doctor) {
         selectedDoctor = doctor;
         doctorNameEl.textContent = doctor.ten;
+
+        // Lấy trạng thái lịch khám của bác sĩ
+        try {
+            const response = await fetch(`http://localhost:5000/appointment/trangthai/${doctor.id}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Không thể tải trạng thái lịch khám");
+            }
+
+            // Hiển thị lịch khám có sẵn
+            const scheduleOptions = document.getElementById('scheduleOptions');
+            scheduleOptions.innerHTML = '';
+
+            // Tạo option cho ca sáng
+            if (data.sang.id) {
+                const sangDiv = document.createElement('div');
+                sangDiv.innerHTML = `
+                    <input type="radio" name="schedule" value="${data.sang.id}" id="sang" ${data.sang.daDat ? 'disabled' : ''}>
+                    <label for="sang">Buổi sáng (8:00 AM) ${data.sang.daDat ? '- Đã được đặt' : '- Còn trống'}</label>
+                `;
+                scheduleOptions.appendChild(sangDiv);
+            }
+
+            // Tạo option cho ca chiều
+            if (data.chieu.id) {
+                const chieuDiv = document.createElement('div');
+                chieuDiv.innerHTML = `
+                    <input type="radio" name="schedule" value="${data.chieu.id}" id="chieu" ${data.chieu.daDat ? 'disabled' : ''}>
+                    <label for="chieu">Buổi chiều (2:00 PM) ${data.chieu.daDat ? '- Đã được đặt' : '- Còn trống'}</label>
+                `;
+                scheduleOptions.appendChild(chieuDiv);
+            }
+
+            if (!data.sang.id && !data.chieu.id) {
+                scheduleOptions.innerHTML = '<p>Bác sĩ này chưa có lịch khám nào.</p>';
+            }
+
+        } catch (error) {
+            console.error("Lỗi khi tải trạng thái lịch khám:", error);
+            alert("Không thể tải trạng thái lịch khám. Vui lòng thử lại sau.");
+        }
+
         scheduleSection.style.display = "block";
         paymentSection.style.display = "none";
         myBookingsSection.style.display = "none";
@@ -94,25 +137,26 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        if (!selectedDoctor || !selectedSchedule) {
+            alert("Vui lòng chọn bác sĩ và khung giờ!");
+            return;
+        }
+
         try {
-            // Create appointment data
-            const today = new Date();
-            const appointmentData = {
-                lichKham: {
-                    ngay: today.toISOString(),
-                    gio: selectedSchedule === "Buổi sáng" ? "Sáng" : "Chiều",
-                    benhNhanId: parseInt(userId),
-                    bacSiId: selectedDoctor.id
-                }
+            // Cập nhật benhNhanId vào lịch khám đã có sẵn
+            const bookingData = {
+                benhNhanId: parseInt(userId)
             };
 
-            // Send data to API
-            const response = await fetch("http://localhost:5000/appointment/create", {
-                method: "POST",
+            console.log("Dữ liệu đặt lịch:", bookingData); // Debug log
+
+            // Gửi yêu cầu cập nhật lịch khám
+            const response = await fetch(`http://localhost:5000/appointment/book/${selectedSchedule}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(appointmentData)
+                body: JSON.stringify(bookingData)
             });
 
             const data = await response.json();
@@ -122,20 +166,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             alert(
-                `Đặt lịch thành công:\nBác sĩ: ${selectedDoctor.ten}\nLịch: ${selectedSchedule}\nThanh toán: ${selectedPayment}`
+                `Đặt lịch thành công!\nBác sĩ: ${selectedDoctor.ten}\nThanh toán: ${selectedPayment}\nID lịch khám: ${data.lichKham.id}`
             );
 
             // Reset form
-            document.querySelector('input[name="schedule"]:checked').checked = false;
-            document.querySelector('input[name="payment"]:checked').checked = false;
+            const scheduleRadio = document.querySelector('input[name="schedule"]:checked');
+            const paymentRadio = document.querySelector('input[name="payment"]:checked');
+            if (scheduleRadio) scheduleRadio.checked = false;
+            if (paymentRadio) paymentRadio.checked = false;
+
             scheduleSection.style.display = "none";
             paymentSection.style.display = "none";
+
+            // Reset selected variables
+            selectedDoctor = null;
+            selectedSchedule = null;
+            selectedPayment = null;
 
             // Show updated bookings
             showMyBookings();
         } catch (error) {
             console.error("Lỗi khi đặt lịch khám:", error);
-            alert("Không thể đặt lịch khám. Vui lòng thử lại sau.");
+            alert(`Không thể đặt lịch khám: ${error.message}`);
         }
     }
 

@@ -150,6 +150,46 @@ const getAppointmentsByPatient = async (req, res) => {
   }
 };
 
+// Cập nhật benhNhanId cho lịch khám (đặt lịch)
+const bookAppointment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { benhNhanId } = req.body;
+
+    // Tìm lịch khám theo ID
+    const lich = await lichKham.findByPk(id);
+    if (!lich) {
+      return res.status(404).json({ message: "Không tìm thấy lịch khám." });
+    }
+
+    // Kiểm tra xem lịch khám đã được đặt chưa
+    if (lich.benhNhanId) {
+      return res.status(400).json({ message: "Lịch khám này đã được đặt." });
+    }
+
+    // Cập nhật benhNhanId
+    lich.benhNhanId = benhNhanId;
+    await lich.save();
+
+    // Lấy thông tin chi tiết để trả về
+    const updatedAppointment = await lichKham.findOne({
+      where: { id },
+      include: [
+        { model: ThongTinCaNhan, as: "benhNhan" },
+        { model: ThongTinCaNhan, as: "bacSi" }
+      ]
+    });
+
+    res.json({
+      lichKham: updatedAppointment,
+      message: "Đặt lịch khám thành công!"
+    });
+  } catch (error) {
+    console.error("❌ Lỗi khi đặt lịch khám:", error);
+    res.status(500).json({ message: "Lỗi server khi đặt lịch khám." });
+  }
+};
+
 // Export
 module.exports = {
   createAppointment,
@@ -157,5 +197,6 @@ module.exports = {
   getLichTrangThai,
   getLichKhamById,
   resetBenhNhanId,
-  getAppointmentsByPatient
+  getAppointmentsByPatient,
+  bookAppointment
 };

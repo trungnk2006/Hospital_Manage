@@ -4,7 +4,8 @@ const {
   getLichTrangThai,
   getLichKhamById,
   resetBenhNhanId,
-  getAppointmentsByPatient
+  getAppointmentsByPatient,
+  bookAppointment
 } = require('../controller/appointmentCtrl');
 
 const router = require('express').Router();
@@ -26,5 +27,8 @@ router.put('/reset/:id', resetBenhNhanId);
 
 // Lấy lịch khám theo bệnh nhân
 router.get('/patient/:benhNhanId', getAppointmentsByPatient);
+
+// Đặt lịch khám (cập nhật benhNhanId)
+router.put('/book/:id', bookAppointment);
 
 module.exports = router;
