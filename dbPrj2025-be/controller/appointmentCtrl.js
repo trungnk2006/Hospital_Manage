@@ -86,7 +86,7 @@ const getLichTrangThai = async (req, res) => {
   }
 };
 
-// get id for lịch khám 
+// get id for lịch khám
 const getLichKhamById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -98,7 +98,7 @@ const getLichKhamById = async (req, res) => {
       ]
     });
 
-  
+
 
     res.json(item);
   } catch (error) {
@@ -128,11 +128,34 @@ const resetBenhNhanId = async (req, res) => {
 };
 
 
+// Lấy lịch khám theo bệnh nhân
+const getAppointmentsByPatient = async (req, res) => {
+  try {
+    const benhNhanId = parseInt(req.params.benhNhanId);
+
+    const appointments = await lichKham.findAll({
+      where: { benhNhanId },
+      include: [
+        { model: ThongTinCaNhan, as: "bacSi" }
+      ]
+    });
+
+    res.json({
+      appointments,
+      message: "Lấy lịch khám thành công"
+    });
+  } catch (error) {
+    console.error("❌ Lỗi khi lấy lịch khám theo bệnh nhân:", error);
+    res.status(500).json({ message: "Lỗi server khi lấy lịch khám" });
+  }
+};
+
 // Export
 module.exports = {
   createAppointment,
   deleteAppointment,
   getLichTrangThai,
-   getLichKhamById,
-   resetBenhNhanId  
+  getLichKhamById,
+  resetBenhNhanId,
+  getAppointmentsByPatient
 };

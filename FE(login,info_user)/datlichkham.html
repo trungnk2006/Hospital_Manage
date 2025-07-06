@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang Chủ Đặt Lịch Khám</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        .top-right-buttons {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .top-right-buttons button {
+            margin-left: 10px;
+            padding: 6px 12px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .top-right-buttons button:hover {
+            background-color: #5a6268;
+        }
+
+        .doctor-list {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 20px;
+            gap: 1rem;
+        }
+
+        .doctor-card {
+            flex: 0 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .schedule,
+        .payment,
+        .my-bookings,
+        .my-examinations {
+            max-width: 400px;
+            margin: 20px auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .schedule button,
+        .payment button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .schedule button:hover,
+        .payment button:hover {
+            background-color: #218838;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .my-bookings table,
+        .my-examinations table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .my-bookings th,
+        .my-bookings td,
+        .my-examinations th,
+        .my-examinations td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .my-bookings th,
+        .my-examinations th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<h1>Đặt Lịch Khám</h1>
+
+<div class="top-right-buttons">
+    <button onclick="showMyBookings()">Xem lịch khám của tôi</button>
+    <button onclick="showMyExaminations()">Xem đơn khám của tôi</button>
+    <button onclick="showProfile()">Xem hồ sơ cá nhân</button>
+</div>
+
+<div class="doctor-list" id="doctorList"></div>
+
+<div class="schedule" id="scheduleSection">
+    <h3>Lịch khám của <span id="doctorName"></span></h3>
+    <label><input type="radio" name="schedule" value="Buổi sáng" /> Buổi sáng</label>
+    <label><input type="radio" name="schedule" value="Buổi chiều" /> Buổi chiều</label>
+    <button onclick="selectSchedule()">Chọn lịch</button>
+</div>
+
+<div class="payment" id="paymentSection">
+    <h3>Chọn phương thức thanh toán</h3>
+    <label><input type="radio" name="payment" value="Chuyển khoản" /> Chuyển khoản</label>
+    <label><input type="radio" name="payment" value="Tiền mặt" /> Tiền mặt</label>
+    <label><input type="radio" name="payment" value="Ví điện tử" /> Ví điện tử</label>
+    <button onclick="submitBooking()">Xác nhận đặt lịch</button>
+</div>
+
+<div class="my-bookings" id="myBookingsSection">
+    <h3>Lịch khám của tôi</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Bác sĩ</th>
+            <th>Chuyên khoa</th>
+            <th>Khung giờ</th>
+            <th>Thanh toán</th>
+        </tr>
+        </thead>
+        <tbody id="myBookingsTableBody"></tbody>
+    </table>
+</div>
+
+<div class="my-examinations" id="myExaminationsSection">
+    <h3>Đơn khám của tôi</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Bác sĩ</th>
+            <th>Bệnh lý</th>
+            <th>Mức độ bệnh</th>
+            <th>Điều trị</th>
+            <th>Ngày khám</th>
+        </tr>
+        </thead>
+        <tbody id="myExaminationsTableBody"></tbody>
+    </table>
+</div>
+
+<script src="script/datlichkham.js"></script>
+</body>
+</html>

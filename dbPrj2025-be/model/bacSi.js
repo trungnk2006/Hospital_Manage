@@ -5,7 +5,7 @@ const BacSi = sequelize.define('bacSi', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true 
+    autoIncrement: true
   },
   thongTinCaNhanId: DataTypes.INTEGER,
   namKinhNghiem: DataTypes.INTEGER,

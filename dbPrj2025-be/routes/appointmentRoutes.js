@@ -3,7 +3,8 @@ const {
   deleteAppointment,
   getLichTrangThai,
   getLichKhamById,
-  resetBenhNhanId 
+  resetBenhNhanId,
+  getAppointmentsByPatient
 } = require('../controller/appointmentCtrl');
 
 const router = require('express').Router();
@@ -22,5 +23,8 @@ router.get('/:id', getLichKhamById);
 
 // Reset benhNhanId sau khi tạo đơn khám
 router.put('/reset/:id', resetBenhNhanId);
+
+// Lấy lịch khám theo bệnh nhân
+router.get('/patient/:benhNhanId', getAppointmentsByPatient);
 
 module.exports = router;

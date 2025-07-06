@@ -29,7 +29,7 @@ const userRegister = async (req, res) => {
 
     if (role == "bacSi") {
       const { ten, CCCD, ngaySinh, gioiTinh, sdt, namKinhNghiem, caTruc } = req.body.thongTinCaNhan;
-      
+
       // Validate required fields
       if (!ten || !CCCD || !ngaySinh || !sdt) {
         return handleExceptions(400, "Thiếu thông tin bắt buộc", res);
@@ -48,7 +48,7 @@ const userRegister = async (req, res) => {
       );
     } else if (role == "benhNhan") {
       const { ten, CCCD, ngaySinh, gioiTinh, sdt, diaChi } = req.body.thongTinCaNhan;
-      
+
       if (!ten || !CCCD || !ngaySinh || !sdt) {
         return handleExceptions(400, "Thiếu thông tin bắt buộc", res);
       }
@@ -69,7 +69,7 @@ const userRegister = async (req, res) => {
     }
 
     const userWithDetails = await getUserInfo(newUser.id);
-    
+
     res.status(201).json({
       success: true,
       user: {
@@ -90,7 +90,7 @@ const userRegister = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const { CCCD } = req.body;
-    
+
     if (!CCCD) {
       return handleExceptions(400, "Vui lòng nhập CCCD", res);
     }
@@ -102,18 +102,18 @@ const userLogin = async (req, res) => {
         { model: BacSi, as: "bacSi" },
       ],
     });
-    
+
     if (!user) {
       return handleExceptions(404, "CCCD không tồn tại", res);
     }
-    
+
     res.json({
       success: true,
       id: user.id,
       role: user.bacSi ? "bacSi" : "benhNhan",
       message: "Đăng nhập thành công"
     });
-    
+
   } catch (e) {
     handleExceptions(500, "Lỗi server: " + e.message, res);
   }
@@ -122,13 +122,13 @@ const userLogin = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     if (!id) {
       return handleExceptions(400, "Thiếu ID người dùng", res);
     }
 
     const user = await getUserInfo(id);
-    
+
     if (!user) {
       return handleExceptions(404, "Người dùng không tồn tại", res);
     }
@@ -141,7 +141,7 @@ const getUser = async (req, res) => {
       },
       message: "Thành công"
     });
-    
+
   } catch (e) {
     handleExceptions(500, "Lỗi server: " + e.message, res);
   }
@@ -151,10 +151,37 @@ const userLogout = async (req, res) => {
   res.json({ success: true, message: "Đăng xuất thành công" });
 };
 
+// Lấy danh sách bác sĩ
+const getDoctors = async (req, res) => {
+  try {
+    const doctors = await ThongTinCaNhan.findAll({
+      include: [
+        { 
+          model: BacSi, 
+          as: "bacSi",
+          required: true // Chỉ lấy những người dùng có liên kết với bảng BacSi
+        }
+      ]
+    });
+
+    res.json({
+      success: true,
+      doctors: doctors.map(doctor => ({
+        ...doctor.dataValues,
+        chuyenKhoa: doctor.bacSi?.chuyenKhoa || "Đa khoa"
+      })),
+      message: "Lấy danh sách bác sĩ thành công"
+    });
+  } catch (error) {
+    handleExceptions(500, "Lỗi server khi lấy danh sách bác sĩ: " + error.message, res);
+  }
+};
+
 module.exports = {
   userRegister,
   userLogin,
   userLogout,
   getUser,
-  getUserInfo // Thêm export hàm này
+  getUserInfo, // Thêm export hàm này
+  getDoctors
 };

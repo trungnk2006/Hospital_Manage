@@ -1,6 +1,6 @@
 const { ThongTinCaNhan, BenhNhan, BacSi } = require('../model');
 
-const { userLogin, userRegister, getUser, getUserInfo } = require('../controller/userCtrl');
+const { userLogin, userRegister, getUser, getUserInfo, getDoctors } = require('../controller/userCtrl');
 
 const router = require('express').Router();
 
@@ -10,6 +10,7 @@ router.get('/', (req, res) => {
 
 router.post('/register', userRegister);
 router.post('/login', userLogin);
+router.get('/doctors', getDoctors);
 router.get('/:id', getUser);
 
 // new routes for info
@@ -20,7 +21,7 @@ router.get('/info/:id', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-   
+
     let role = 'unknown';
     if (user.bacSi) {
       role = 'bacsi';
